@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>TripTales - Travel Blog</title>
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -63,80 +62,51 @@
         }
     </style>
 </head>
-
 <body>
-
 <header>
     <h1>TripTales – Travel Blog</h1>
 </header>
-
-
 <main>
-
-    <!-- LOGIN & SIGNUP -->
     <div id="authSection" class="card">
         <h2>Login / Signup</h2>
         <input type="text" id="authUser" placeholder="Enter Username">
         <input type="password" id="authPass" placeholder="Enter Password">
-
         <button onclick="signup()">Sign Up</button>
         <button onclick="login()">Login</button>
-
         <p id="authMsg" style="color:red;"></p>
     </div>
-
-
-    <!-- BLOG POST WRITING SECTION -->
     <div id="blogSection" class="card" style="display:none;">
         <h2>Write Your Travel Story</h2>
-
         <input type="text" id="title" placeholder="Blog Title">
         <textarea id="story" rows="5" placeholder="Write your travel experience here..."></textarea>
-
         <label><b>Upload Image:</b></label>
         <input type="file" id="imageInput" accept="image/*">
-
         <button onclick="postBlog()">Post Story</button>
         <p id="msg" style="color:red;"></p>
     </div>
-
-
-    <!-- DISPLAY BLOGS -->
     <section id="blogList"></section>
-
 </main>
-
-
 <footer>
     <p>© 2025 TripTales | Travel Blog</p>
 </footer>
-
-
 <script>
-    // SIGNUP
     function signup() {
         let user = document.getElementById("authUser").value;
         let pass = document.getElementById("authPass").value;
-
         if (user === "" || pass === "") {
             document.getElementById("authMsg").innerText = "Please fill all fields.";
             return;
         }
-
         localStorage.setItem("username", user);
         localStorage.setItem("password", pass);
         document.getElementById("authMsg").style.color = "green";
         document.getElementById("authMsg").innerText = "Signup Successful! You can now login.";
     }
-
-    // LOGIN
     function login() {
         let user = document.getElementById("authUser").value;
         let pass = document.getElementById("authPass").value;
-
         let savedUser = localStorage.getItem("username");
         let savedPass = localStorage.getItem("password");
-
         if (user === savedUser && pass === savedPass) {
             document.getElementById("authSection").style.display = "none";
             document.getElementById("blogSection").style.display = "block";
@@ -144,19 +114,14 @@
             document.getElementById("authMsg").innerText = "Invalid login!";
         }
     }
-
-    // POST BLOG
     function postBlog() {
         let title = document.getElementById("title").value;
         let story = document.getElementById("story").value;
         let file = document.getElementById("imageInput").files[0];
-
         if (title === "" || story === "") {
             document.getElementById("msg").innerText = "Title and Story cannot be empty.";
             return;
         }
-
-        // Read image as Base64
         let reader = new FileReader();
         reader.onload = function(e) {
             let blog = {
@@ -164,37 +129,28 @@
                 story: story,
                 image: e.target.result
             };
-
             let blogs = JSON.parse(localStorage.getItem("blogs") || "[]");
             blogs.push(blog);
             localStorage.setItem("blogs", JSON.stringify(blogs));
-
             displayBlogs();
         }
-
         if (file) reader.readAsDataURL(file);
         else {
-            // No image chosen
             let blog = { title, story, image: "" };
             let blogs = JSON.parse(localStorage.getItem("blogs") || "[]");
             blogs.push(blog);
             localStorage.setItem("blogs", JSON.stringify(blogs));
             displayBlogs();
         }
-
         document.getElementById("msg").innerText = "";
         document.getElementById("title").value = "";
         document.getElementById("story").value = "";
         document.getElementById("imageInput").value = "";
     }
-
-    // SHOW BLOGS
     function displayBlogs() {
         let blogs = JSON.parse(localStorage.getItem("blogs") || "[]");
         let blogList = document.getElementById("blogList");
-
         blogList.innerHTML = "";
-
         blogs.forEach((b) => {
             blogList.innerHTML += `
                 <article class="blog-post card">
@@ -205,10 +161,7 @@
             `;
         });
     }
-
-    // Load blogs on startup
     displayBlogs();
 </script>
-
 </body>
 </html>

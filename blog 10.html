@@ -60,6 +60,13 @@
             padding: 15px;
             margin-top: 30px;
         }
+        .delete-btn {
+            background: red;
+            margin-top: 10px;
+        }
+        .delete-btn:hover {
+            background: darkred;
+        }
     </style>
 </head>
 <body>
@@ -102,6 +109,7 @@
         document.getElementById("authMsg").style.color = "green";
         document.getElementById("authMsg").innerText = "Signup Successful! You can now login.";
     }
+
     function login() {
         let user = document.getElementById("authUser").value;
         let pass = document.getElementById("authPass").value;
@@ -114,6 +122,7 @@
             document.getElementById("authMsg").innerText = "Invalid login!";
         }
     }
+
     function postBlog() {
         let title = document.getElementById("title").value;
         let story = document.getElementById("story").value;
@@ -147,20 +156,28 @@
         document.getElementById("story").value = "";
         document.getElementById("imageInput").value = "";
     }
+    function deleteBlog(index) {
+        let blogs = JSON.parse(localStorage.getItem("blogs") || "[]");
+        blogs.splice(index, 1); // remove blog at given index
+        localStorage.setItem("blogs", JSON.stringify(blogs));
+        displayBlogs();
+    }
     function displayBlogs() {
         let blogs = JSON.parse(localStorage.getItem("blogs") || "[]");
         let blogList = document.getElementById("blogList");
         blogList.innerHTML = "";
-        blogs.forEach((b) => {
+        blogs.forEach((b, i) => {
             blogList.innerHTML += `
                 <article class="blog-post card">
                     <h2>${b.title}</h2>
                     <p>${b.story}</p>
                     ${b.image ? `<img src="${b.image}">` : ""}
+                    <button class="delete-btn" onclick="deleteBlog(${i})">Delete</button>
                 </article>
             `;
         });
     }
+
     displayBlogs();
 </script>
 </body>
